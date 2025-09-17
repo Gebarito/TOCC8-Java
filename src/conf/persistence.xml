@@ -5,10 +5,10 @@
     <class>model.Produto</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/TOCC8"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/tocc8"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="19972002"/>
+      <property name="javax.persistence.jdbc.password" value="ifsp"/>
     </properties>
   </persistence-unit>
 </persistence>
