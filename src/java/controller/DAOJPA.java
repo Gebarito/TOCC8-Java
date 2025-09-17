@@ -125,7 +125,8 @@ public class DAOJPA {
                     novoProduto.setQtde(1);
                     carrinho.add(novoProduto);
 
-                    produtoEmEstoque.setQtde(produtoEmEstoque.getQtde() - 1);           
+                    produtoEmEstoque.setQtde(produtoEmEstoque.getQtde() - 1);
+                    this.alterar(produtoEmEstoque);
                 }
             }
         }catch(Exception ex){
