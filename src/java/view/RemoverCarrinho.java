@@ -54,14 +54,23 @@ public class RemoverCarrinho extends HttpServlet {
 
             HttpSession session = request.getSession();
             carrinho = (List<Produto>) session.getAttribute("carrinho");
-
+            int qtdCarrinho = 0;
             for (Produto p : carrinho) {
                 if (Objects.equals(p.getCodigo(), produto.getCodigo())) {
-                    produto.setQtde(produto.getQtde() + p.getQtde());
-                    dao.alterar(produto);
+                    qtdCarrinho = p.getQtde();
                     carrinho.remove(p);
+                    break;
                 }
             }
+            Produto novoProduto = (Produto) dao.getById(produto.getCodigo());
+            if (Objects.nonNull(novoProduto)){
+                novoProduto.setQtde(novoProduto.getQtde() + qtdCarrinho);
+                dao.alterar(novoProduto);
+            }else{
+                dao.gravar(produto);
+            }
+            
+
 
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -69,7 +78,11 @@ public class RemoverCarrinho extends HttpServlet {
             out.println("<title>Servlet RemoverCarrinho</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RemoverCarrinho at " + request.getContextPath() + "</h1>");
+            out.println("<script>");
+            out.println("setTimeout(function() {");
+            out.println("  window.location.href = 'index.html';");
+            out.println("}, 500);");
+            out.println("</script>");
             out.println("</body>");
             out.println("</html>");
         } catch (Exception ex) {
@@ -79,7 +92,12 @@ public class RemoverCarrinho extends HttpServlet {
             out.println("<title>Servlet Remover do Carrinho</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Erro ao Remover do carrinho: " + ex.getMessage() + "</h1>");
+            // Redireciona para tela inicial
+            out.println("<script>");
+            out.println("setTimeout(function() {");
+            out.println("  window.location.href = 'index.html';");
+            out.println("}, 500);");
+            out.println("</script>");
             out.println("</body>");
             out.println("</html>");
         }

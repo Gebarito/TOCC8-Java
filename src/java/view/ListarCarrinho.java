@@ -37,7 +37,7 @@ public class ListarCarrinho extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         List<Produto> lista;
         PrintWriter out = response.getWriter();
-        
+        double total = 0;
         try {
             
             HttpSession session = request.getSession();
@@ -52,6 +52,7 @@ public class ListarCarrinho extends HttpServlet {
             if (lista != null) {
                 out.println("<h1>Carrinho: </h1>");
                 for (Produto p : lista) {
+                    total += p.getPreco() * p.getQtde();
                     out.println("<form method=\"POST\" action=\"RemoverCarrinho\">");
 
                     out.println("<input type=\"hidden\" name=\"txtCodigo\" value=\"" + p.getCodigo() + "\" />");
@@ -70,6 +71,7 @@ public class ListarCarrinho extends HttpServlet {
             else{
                 out.println("<h1>Carrinho Vazio!</h1>");
             }
+            out.println("<h3>Total: "+ total +"</h3>");
             out.println("</body>");
             out.println("</html>");
          } catch (Exception ex) {

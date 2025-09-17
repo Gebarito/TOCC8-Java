@@ -74,6 +74,12 @@ public class AdicionarAoCarrinho extends HttpServlet {
             out.println("<body>");
             if (produto.getCodigo() > 0) {
                 out.println("<h1> "+ produto.getDescricao() + " Salvo com sucesso no carrinho. </h1>");
+                // Redireciona para tela inicial
+                out.println("<script>");
+                out.println("setTimeout(function() {");
+                out.println("  window.location.href = 'index.html';");
+                out.println("}, 500);");
+                out.println("</script>");
             } else {
                 out.println("<h1> Nada foi salvo no carrinho. </h1>");
             }
