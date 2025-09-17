@@ -4,26 +4,26 @@
  */
 package view;
 
-
 import controller.DAOJPA;
-import java.sql.ResultSet;
+import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.Produto;
 
 /**
  *
- * @author prampero
+ * @author joaop
  */
-@WebServlet(name = "Listar", urlPatterns = {"/Listar"})
-public class Listar extends HttpServlet {
- private static final long serialVersionUID = 1L;
+@WebServlet(name = "AdicionarAoCarrinho", urlPatterns = {"/AdicionarAoCarrinho"})
+public class AdicionarAoCarrinho extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -36,44 +36,46 @@ public class Listar extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-        
+        response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        DAOJPA produtoDAO;
-        List<Produto> lista;
+        DAOJPA dao;
+        Produto produto;
+        int qtde = 0;
         PrintWriter out = response.getWriter();
         try {
-            produtoDAO = new DAOJPA();
-            lista = produtoDAO.listarTodos();
-            //lista = produtoDAO.listar(request.getParameter("txtDescricao"));
+            produto = new Produto();
+            produto.setCodigo(Integer.valueOf(request.getParameter("txtCodigo")));
+            produto.setDescricao(request.getParameter("txtDescricao"));
+            produto.setPreco(Double.valueOf(request.getParameter("txtPreco")));
+            produto.setQtde(Integer.valueOf(request.getParameter("txtQtde")));
             
+            HttpSession session = request.getSession();
+            List<Produto> carrinho = (List<Produto>) session.getAttribute("carrinho");
+            
+            if (carrinho == null) {
+                carrinho = new ArrayList<>();
+                session.setAttribute("carrinho", carrinho);
+            }
+            
+            if (produto.getQtde() <= 0) {
+                out.println("<h1> Item não disponivel no estoque </h1>");
+                return;
+            }
+            
+            dao = new DAOJPA();
+            dao.adicionarAoCarrinho(produto, carrinho);
+
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Gravar</title>");
+            out.println("<title>Servlet Adicionar ao Carrinho</title>");
             out.println("</head>");
             out.println("<body>");
-            if (lista != null) {
-                out.println("<h1>Lista da base de dados </h1>");
-                for (Produto p : lista) {
-                    out.println("<form method=\"POST\" action=\"AdicionarAoCarrinho\">");
-
-                    out.println("<input type=\"hidden\" name=\"txtCodigo\" value=\"" + p.getCodigo() + "\" />");
-                    out.println("<input type=\"hidden\" name=\"txtDescricao\" value=\"" + p.getDescricao() + "\" />");
-                    out.println("<input type=\"hidden\" name=\"txtPreco\" value=\"" + p.getPreco() + "\" />");
-                    out.println("<input type=\"hidden\" name=\"txtQtde\" value=\"" + p.getQtde() + "\" />");
-
-                    out.println("<h2>Codigo: " + p.getCodigo() + " | Nome: " + p.getDescricao() +
-                            " | Preço: " + p.getPreco() + " | Quantidade: " + p.getQtde() +
-                            " <input type=\"submit\" name=\"b1\" value=\"AdicionarAoCarrinho\" />" +
-                            "</h2>");
-
-                    out.println("</form>");
-                }
+            if (produto.getCodigo() > 0) {
+                out.println("<h1> "+ produto.getDescricao() + " Salvo com sucesso no carrinho. </h1>");
+            } else {
+                out.println("<h1> Nada foi salvo no carrinho. </h1>");
             }
             out.println("</body>");
             out.println("</html>");
@@ -81,13 +83,14 @@ public class Listar extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Listar</title>");
+            out.println("<title>Servlet Adicionar ao carrinho</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Erro ao Listar: " + ex.getMessage() + "</h1>");
+            out.println("<h1>Erro ao Adicionar ao carrinho: " + ex.getMessage() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

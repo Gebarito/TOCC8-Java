@@ -4,26 +4,25 @@
  */
 package view;
 
-
 import controller.DAOJPA;
-import java.sql.ResultSet;
+import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Produto;
 
 /**
  *
- * @author prampero
+ * @author joaop
  */
-@WebServlet(name = "Listar", urlPatterns = {"/Listar"})
-public class Listar extends HttpServlet {
- private static final long serialVersionUID = 1L;
+@WebServlet(name = "ListarCarrinho", urlPatterns = {"/ListarCarrinho"})
+public class ListarCarrinho extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,32 +34,25 @@ public class Listar extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
-        
         request.setCharacterEncoding("UTF-8");
-        DAOJPA produtoDAO;
         List<Produto> lista;
         PrintWriter out = response.getWriter();
+        
         try {
-            produtoDAO = new DAOJPA();
-            lista = produtoDAO.listarTodos();
-            //lista = produtoDAO.listar(request.getParameter("txtDescricao"));
             
-            /* TODO output your page here. You may use following sample code. */
+            HttpSession session = request.getSession();
+            lista = (List<Produto>) session.getAttribute("carrinho");
+             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Gravar</title>");
+            out.println("<title>Servlet Carrinho</title>");
             out.println("</head>");
             out.println("<body>");
             if (lista != null) {
-                out.println("<h1>Lista da base de dados </h1>");
+                out.println("<h1>Carrinho: </h1>");
                 for (Produto p : lista) {
-                    out.println("<form method=\"POST\" action=\"AdicionarAoCarrinho\">");
+                    out.println("<form method=\"POST\" action=\"RemoverCarrinho\">");
 
                     out.println("<input type=\"hidden\" name=\"txtCodigo\" value=\"" + p.getCodigo() + "\" />");
                     out.println("<input type=\"hidden\" name=\"txtDescricao\" value=\"" + p.getDescricao() + "\" />");
@@ -75,19 +67,22 @@ public class Listar extends HttpServlet {
                     out.println("</form>");
                 }
             }
+            else{
+                out.println("<h1>Carrinho Vazio!</h1>");
+            }
             out.println("</body>");
             out.println("</html>");
-        } catch (Exception ex) {
+         } catch (Exception ex) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Listar</title>");
+            out.println("<title>Servlet Listar Carrinho</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Erro ao Listar: " + ex.getMessage() + "</h1>");
+            out.println("<h1>Erro ao Listar Carrinho: " + ex.getMessage() + "</h1>");
             out.println("</body>");
             out.println("</html>");
-        }
+         }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

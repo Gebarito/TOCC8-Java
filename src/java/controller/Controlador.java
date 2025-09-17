@@ -39,7 +39,6 @@ public class Controlador extends HttpServlet {
         try {
             botao = request.getParameter("b1").trim().toLowerCase();
             switch (botao) {
-
                 case "gravar":
                     // encaminha a requisição para o servletScadastar
                     request.getRequestDispatcher("Gravar").forward(request, response);
@@ -59,6 +58,15 @@ public class Controlador extends HttpServlet {
                     // encaminha a requisição para o servletScadastar
                     request.getRequestDispatcher("Remover").forward(request, response);
                     break;
+                case "listarcarrinho":
+                    request.getRequestDispatcher("ListarCarrinho").forward(request, response);
+                    break;
+                case "adicionaraocarrinho":
+                    request.getRequestDispatcher("AdicionarAoCarrinho").forward(request, response);
+                    break;
+                case "removercarrinho":
+                    request.getRequestDispatcher("RemoverCarrinho").forward(request, response);
+                    break;
             }
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -66,7 +74,7 @@ public class Controlador extends HttpServlet {
             out.println("<title>Controlador</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Evento :" + botao + " não tratado!</h1>");
+            out.println("<h1>Evento: " + botao + " não tratado!</h1>");
             out.println("</body>");
             out.println("</html>");
         } catch (Exception ex) {

@@ -7,6 +7,7 @@ package controller;
 
 
 import java.util.List;
+import java.util.Objects;
 import model.Banco;
 import model.Produto;
 
@@ -101,6 +102,52 @@ public class DAOJPA {
             return lista;
         } catch (Exception ex) {
             throw new Exception("Erro ao listarTodos: " + ex.getMessage());
+        }
+    }
+    
+    public void adicionarAoCarrinho(Produto produtoEmEstoque, List<Produto> carrinho) throws Exception {
+        try{
+            if (produtoEmEstoque.getQtde() > 0){
+                boolean pExiste = false;
+                for (Produto p : carrinho){
+                    if (Objects.equals(produtoEmEstoque.getCodigo(), p.getCodigo())){
+                        p.setQtde(p.getQtde() + 1);
+                        produtoEmEstoque.setQtde(produtoEmEstoque.getQtde() - 1);
+                        this.alterar(produtoEmEstoque);
+                        pExiste = true;
+                    }
+                }
+                if (!pExiste){
+                    Produto novoProduto = new Produto();
+                    novoProduto.setCodigo(produtoEmEstoque.getCodigo());
+                    novoProduto.setDescricao(produtoEmEstoque.getDescricao());
+                    novoProduto.setPreco(produtoEmEstoque.getPreco());
+                    novoProduto.setQtde(1);
+                    carrinho.add(novoProduto);
+
+                    produtoEmEstoque.setQtde(produtoEmEstoque.getQtde() - 1);           
+                }
+            }
+        }catch(Exception ex){
+            throw new Exception("Erro ao adicionar no carrinho: " + ex.getMessage());
+        }
+    }
+    
+    public void removerCarrinho(Produto produto, List<Produto> carrinho) throws Exception{
+        try{
+            List<Produto> estoque = this.listarTodos();
+
+            if (carrinho != null && produto != null){
+                carrinho.remove(produto);
+            }
+
+            for(Produto p : estoque){
+                if (Objects.equals(p.getCodigo(), produto.getCodigo())){
+                    p.setQtde(produto.getQtde());
+                }
+            }
+        }catch(Exception ex){
+            throw new Exception("Erro ao remover do carrinho: " + ex.getMessage());
         }
     }
 /*

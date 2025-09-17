@@ -40,7 +40,7 @@ public class Remover extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             produto = new Produto();
-              produto.setCodigo(Integer.valueOf(request.getParameter("txtCodigo")));
+            produto.setCodigo(Integer.valueOf(request.getParameter("txtCodigo")));
   
 
             produtoDAO = new DAOJPA();
