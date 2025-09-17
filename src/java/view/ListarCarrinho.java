@@ -61,7 +61,7 @@ public class ListarCarrinho extends HttpServlet {
 
                     out.println("<h2>Codigo: " + p.getCodigo() + " | Nome: " + p.getDescricao() +
                             " | Preço: " + p.getPreco() + " | Quantidade: " + p.getQtde() +
-                            " <input type=\"submit\" name=\"b1\" value=\"AdicionarAoCarrinho\" />" +
+                            " <input type=\"submit\" name=\"b1\" value=\"RemoverCarrinho\" />" +
                             "</h2>");
 
                     out.println("</form>");

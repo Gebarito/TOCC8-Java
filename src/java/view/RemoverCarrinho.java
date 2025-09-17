@@ -34,54 +34,54 @@ public class RemoverCarrinho extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, Exception {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+        request.setCharacterEncoding("UTF-8");
+ 
         List<Produto> carrinho;
         DAOJPA dao;
         Produto produto;
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            try{
-                produto = new Produto();
-                produto.setCodigo(Integer.valueOf(request.getParameter("txtCodigo")));
-                produto.setDescricao(request.getParameter("txtDescricao"));
-                produto.setPreco(Double.valueOf(request.getParameter("txtPreco")));
-                produto.setQtde(Integer.valueOf(request.getParameter("txtQtde")));
+        PrintWriter out = response.getWriter();
+        /* TODO output your page here. You may use following sample code. */
+        try {
+            produto = new Produto();
+            produto.setCodigo(Integer.valueOf(request.getParameter("txtCodigo")));
+            produto.setDescricao(request.getParameter("txtDescricao"));
+            produto.setPreco(Double.valueOf(request.getParameter("txtPreco")));
+            produto.setQtde(Integer.valueOf(request.getParameter("txtQtde")));
 
-                dao = new DAOJPA();
+            dao = new DAOJPA();
 
-                HttpSession session = request.getSession();
-                carrinho = (List<Produto>) session.getAttribute("carrinho");
+            HttpSession session = request.getSession();
+            carrinho = (List<Produto>) session.getAttribute("carrinho");
 
-                for (Produto p : carrinho) {
-                    if (Objects.equals(p.getCodigo(), produto.getCodigo())){
-                        produto.setQtde(produto.getQtde() + p.getQtde());
-                        dao.alterar(produto);
-                        carrinho.remove(p);
-                    }
+            for (Produto p : carrinho) {
+                if (Objects.equals(p.getCodigo(), produto.getCodigo())) {
+                    produto.setQtde(produto.getQtde() + p.getQtde());
+                    dao.alterar(produto);
+                    carrinho.remove(p);
                 }
-
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet RemoverCarrinho</title>");
-                out.println("</head>");
-                out.println("<body>");
-                out.println("<h1>Servlet RemoverCarrinho at " + request.getContextPath() + "</h1>");
-                out.println("</body>");
-                out.println("</html>");
-            } catch(Exception ex) {
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet Remover do Carrinho</title>");
-                out.println("</head>");
-                out.println("<body>");
-                out.println("<h1>Erro ao Remover do carrinho: " + ex.getMessage() + "</h1>");
-                out.println("</body>");
-                out.println("</html>");
             }
+
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet RemoverCarrinho</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet RemoverCarrinho at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        } catch (Exception ex) {
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet Remover do Carrinho</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Erro ao Remover do carrinho: " + ex.getMessage() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 
