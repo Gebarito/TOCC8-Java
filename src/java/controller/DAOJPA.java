@@ -112,11 +112,14 @@ public class DAOJPA {
                 for (Produto p : carrinho){
                     if (Objects.equals(produtoEmEstoque.getCodigo(), p.getCodigo())){
                         p.setQtde(p.getQtde() + 1);
+                        
                         produtoEmEstoque.setQtde(produtoEmEstoque.getQtde() - 1);
                         this.alterar(produtoEmEstoque);
+                        
                         pExiste = true;
                     }
                 }
+                
                 if (!pExiste){
                     Produto novoProduto = new Produto();
                     novoProduto.setCodigo(produtoEmEstoque.getCodigo());
@@ -126,6 +129,7 @@ public class DAOJPA {
                     carrinho.add(novoProduto);
 
                     produtoEmEstoque.setQtde(produtoEmEstoque.getQtde() - 1);           
+                    this.alterar(produtoEmEstoque);
                 }
             }
         }catch(Exception ex){

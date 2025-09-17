@@ -54,7 +54,7 @@ public class RemoverCarrinho extends HttpServlet {
 
             HttpSession session = request.getSession();
             carrinho = (List<Produto>) session.getAttribute("carrinho");
-
+            produto = (Produto)dao.getById(produto.getCodigo());
             for (Produto p : carrinho) {
                 if (Objects.equals(p.getCodigo(), produto.getCodigo())) {
                     produto.setQtde(produto.getQtde() + p.getQtde());
@@ -70,6 +70,11 @@ public class RemoverCarrinho extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet RemoverCarrinho at " + request.getContextPath() + "</h1>");
+            out.println("<script>");
+            out.println("setTimeout(function() {");
+            out.println("  window.location.href = 'index.html';");
+            out.println("}, 200);");
+            out.println("</script>");
             out.println("</body>");
             out.println("</html>");
         } catch (Exception ex) {
@@ -79,7 +84,11 @@ public class RemoverCarrinho extends HttpServlet {
             out.println("<title>Servlet Remover do Carrinho</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Erro ao Remover do carrinho: " + ex.getMessage() + "</h1>");
+            out.println("<script>");
+            out.println("setTimeout(function() {");
+            out.println("  window.location.href = 'index.html';");
+            out.println("}, 200);");
+            out.println("</script>");
             out.println("</body>");
             out.println("</html>");
         }
